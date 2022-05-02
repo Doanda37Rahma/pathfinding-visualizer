@@ -4,6 +4,7 @@ import Input from "./component/Input";
 import Select from "./component/Select";
 import clsxm from "./lib/clsxm";
 
+//#region  //*=========== Initial State ===========
 const initialCoordinateState = {
   x: 0,
   y: 0,
@@ -20,10 +21,30 @@ let result = [...Array(initialGridState.x)].map(() =>
     value: false,
   }))
 );
+//#endregion  //*======== Initial State ===========
+
 export default function App() {
+  /**
+   *
+   * sizeGrid = koordinat menggambarkan besarnya ukuran grid, {x:number, y:number}
+   * startNode = koordinat menggambarkan dimana node awal berada, {x:number, y:number}
+   * endNode = koordinat menggambarkan dimana node tujuan berada, {x:number, y:number}
+   */
   const [sizeGrid, setSizeGrid] = React.useState(initialGridState);
   const [startNode, setStartNode] = React.useState(null);
   const [endNode, setEndNode] = React.useState(initialCoordinateState);
+
+  /**
+   * gridCoordinateState = ini isinya semua data di gridnya, bentuknya array dua dimensi
+   * @example aksesnya bisa seperti gridCoordinateState[2][9]
+   * isinya object 
+    {
+      type: string;
+      value: boolean;
+    }
+   * @type bisa 'node' || 'start' || 'end"
+   */
+  const [gridCoordinateState, setGridCoordinatState] = React.useState(result);
 
   const [startCoordinateState, setStartCoordinatState] = React.useState(
     initialCoordinateState
@@ -31,7 +52,6 @@ export default function App() {
   const [endCoordinateState, setEndCoordinatState] = React.useState(
     initialCoordinateState
   );
-  const [gridCoordinateState, setGridCoordinatState] = React.useState(result);
 
   React.useEffect(() => {
     let result = [...Array(sizeGrid.x)].map(() =>
@@ -43,7 +63,22 @@ export default function App() {
     setGridCoordinatState(result);
   }, [sizeGrid]);
 
-  //#region  //*=========== Gris State Management ===========
+  /**
+   * @function untuk mengubah tampilan grid yang sudah dikunjungi
+   * @param x : koordinat x -> number, [0,n]
+   * @param y : koordinat y -> number, [0,n]
+   * @param value : true: aktif, false: tidak aktif
+   */
+  const updateGridCoordinateState = (x, y, value) => {
+    const temp = [...gridCoordinateState];
+    temp[x][y].value = value;
+    setGridCoordinatState(temp);
+  };
+
+  /**
+   * diabaikan saja fungsi dibawah ini, tekan Ctrl + K + 8 untuk collapse bagian ini ya
+   */
+  //#region  //*=========== Grid State Management ===========
   const updateStartCoordinateState = (key, value) => {
     if (value >= sizeGrid[key] || value < 0) {
       return;
@@ -66,13 +101,6 @@ export default function App() {
         [key]: value,
       };
     });
-  };
-
-  // pakai fungsi ini untuk tandain node yang sudah di visited, atau lihat implementasi ada dibawah
-  const updateGridCoordinateState = (x, y, value) => {
-    const temp = [...gridCoordinateState];
-    temp[x][y].value = value;
-    setGridCoordinatState(temp);
   };
 
   const updateStartGridCoordinate = (x, y) => {
@@ -113,11 +141,12 @@ export default function App() {
     setGridCoordinatState(temp);
     setEndNode({ x: x, y: y });
   };
-  //#endregion  //*======== Gris State Management ===========
+  //#endregion  //*======== Grid State Management ===========
 
   return (
     <div className="bg-dark flex items-center justify-center">
       <div className="layout py-20 min-h-screen flex flex-col gap-4 md:gap-8">
+        {/* Title */}
         <header>
           <p className="text-primary-1">Pathfinding Visualizer</p>
           <h1 className="text-pink-200">DAA C</h1>
@@ -197,10 +226,12 @@ export default function App() {
             </div>
           </div>
         </div>
+        {/* Select Grid Size */}
         <div>
           <p>Grid Size</p>
           <Select setGridState={setSizeGrid} />
         </div>
+        {/* Path Grid Visualizer*/}
         <div className="flex justify-center ">
           <div
             className=" grid divide-y"
