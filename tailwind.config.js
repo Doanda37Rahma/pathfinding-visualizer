@@ -18,27 +18,13 @@ module.exports = {
         primary: ["Poppins", ...fontFamily.sans],
       },
       colors: {
-        primary: {
-          // Swatch of Primary Blue Color
-          50: withOpacityValue("--tw-color-primary-50"),
-          100: withOpacityValue("--tw-color-primary-100"),
-          200: withOpacityValue("--tw-color-primary-200"),
-          300: withOpacityValue("--tw-color-primary-300"),
-          400: withOpacityValue("--tw-color-primary-400"),
-          500: withOpacityValue("--tw-color-primary-500"),
-          600: withOpacityValue("--tw-color-primary-600"),
-          700: withOpacityValue("--tw-color-primary-700"),
-          800: withOpacityValue("--tw-color-primary-800"),
-          900: withOpacityValue("--tw-color-primary-900"),
-        },
-        secondary: {
-          yellow: "#FFF000",
-        },
-        tertiary: {
-          red: "#DF212B",
-          white: "#FFFFFF",
-          black: "#000000",
-        },
+        dark: "#121212",
+        "primary-1": "#BB86FC",
+        "primary-2": "#6200EE",
+        "primary-3": "#3700B3",
+        "secondary-1": "#03DAC6",
+        "secondary-2": "#018786",
+        tertiary: "#CF6679",
       },
       keyframes: {
         flicker: {
