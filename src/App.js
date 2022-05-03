@@ -19,6 +19,7 @@ let result = [...Array(initialGridState.x)].map(() =>
   [...Array(initialGridState.y)].map(() => ({
     type: "node",
     value: false,
+    isWall: false,
   }))
 );
 //#endregion  //*======== Initial State ===========
@@ -42,7 +43,7 @@ export default function App() {
       type: string;
       value: boolean;
     }
-   * @type bisa 'node' || 'start' || 'end"
+   * @type bisa 'node' || 'start' || 'end' || 'wall'
    */
   const [gridCoordinateState, setGridCoordinatState] = React.useState(result);
 
@@ -58,6 +59,7 @@ export default function App() {
       [...Array(sizeGrid.y)].map(() => ({
         type: "node",
         value: false,
+        isWall: false,
       }))
     );
     setGridCoordinatState(result);
@@ -74,6 +76,17 @@ export default function App() {
     temp[x][y].value = value;
     setGridCoordinatState(temp);
   };
+  
+  // update grid menjadi wall onClick
+  const updateWallGridCoordinate = (x, y, value, isWall) => {
+    const temp = [...gridCoordinateState];
+    temp[x][y] = {
+      type: "wall",
+      value: value,
+      isWall: isWall,
+    };
+    setGridCoordinatState(temp);
+  }
 
   /**
    * diabaikan saja fungsi dibawah ini, tekan Ctrl + K + 8 untuk collapse bagian ini ya
@@ -258,10 +271,11 @@ export default function App() {
                       ]
                     )}
                     onClick={() =>
-                      updateGridCoordinateState(
+                      updateWallGridCoordinate(
                         x,
                         y,
-                        !gridCoordinateState[x][y].value
+                        !gridCoordinateState[x][y].value,
+                        !gridCoordinateState[x][y].isWall,
                       )
                     }
                   >
