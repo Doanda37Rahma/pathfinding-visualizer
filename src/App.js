@@ -78,13 +78,22 @@ export default function App() {
   };
   
   // update grid menjadi wall onClick
-  const updateWallGridCoordinate = (x, y, value, isWall) => {
+  const updateWallGridCoordinate = (x, y, isWall) => {
     const temp = [...gridCoordinateState];
-    temp[x][y] = {
-      type: "wall",
-      value: value,
-      isWall: isWall,
-    };
+    if(!isWall){
+      temp[x][y] = {
+        type: "node",
+        value: isWall,
+        isWall: isWall,
+      };
+    }
+    else{
+      temp[x][y] = {
+        type: "wall",
+        value: isWall,
+        isWall: isWall,
+      };
+    }
     setGridCoordinatState(temp);
   }
 
@@ -274,7 +283,6 @@ export default function App() {
                       updateWallGridCoordinate(
                         x,
                         y,
-                        !gridCoordinateState[x][y].value,
                         !gridCoordinateState[x][y].isWall,
                       )
                     }
