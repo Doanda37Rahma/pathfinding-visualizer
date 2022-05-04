@@ -1,8 +1,5 @@
 import React from "react";
 import { breadthFirstSearch } from "./algo/breadthFirstSearch";
-import { depthFirstSearch } from "./algo/depthFirstSearch";
-import { greedyBestFirstSearch } from "./algo/greedyBestFirstSearch";
-import { aStarSearch } from "./algo/aStarSearch";
 import Button from "./component/Button";
 import Input from "./component/Input";
 import Select from "./component/Select";
@@ -16,7 +13,7 @@ const initialCoordinateState = {
   value: false,
   isWall: false,
   isVisited: false, previousNode: null,
-  
+
 };
 
 const initialGridState = {
@@ -56,7 +53,7 @@ export default function App() {
       type: string;
       value: boolean;
     }
-   * @type bisa 'node' || 'start' || 'end' || 'wall'
+   * @type bisa 'node' || 'start' || 'end' || 'wall' || 'visited' || 'path'
    */
   const [gridCoordinateState, setGridCoordinatState] = React.useState(result);
 
@@ -83,14 +80,25 @@ export default function App() {
   }, [sizeGrid]);
 
   /**
-   * @function untuk mengubah tampilan grid yang sudah dikunjungi
+   * @function untuk mengubah suatu atribut dari suatu sel dalam grid
    * @param x : koordinat x -> number, [0,n]
    * @param y : koordinat y -> number, [0,n]
-   * @param value : true: aktif, false: tidak aktif
+   * @param key : key dari properti yang akan diubah
+   * @param value : value yang menggantikan value lama
    */
-  const updateGridCoordinateState = (x, y, value) => {
+  const updateGridCoordinateState = (x, y, key, value) => {
+    if (x < 0 || x > gridCoordinateState.length - 1 ||
+      y < 0 || y > gridCoordinateState[0].length - 1) {
+      return;
+    }
+
     const temp = [...gridCoordinateState];
-    temp[x][y].value = value;
+
+    temp[x][y] = {
+      ...temp[x][y],
+      [key]: value
+    };
+
     setGridCoordinatState(temp);
   };
 
@@ -167,7 +175,7 @@ export default function App() {
       type: "start",
       value: true,
     };
-    console.log("start node updated");
+    // console.log("start node updated");
     setGridCoordinatState(temp);
     setStartNode({ ...startNode, x: parseInt(x), y: parseInt(y) });
   };
@@ -189,11 +197,70 @@ export default function App() {
       type: "end",
       value: true,
     };
-    console.log("end node updated");
+    // console.log("end node updated");
     setGridCoordinatState(temp);
     setEndNode({ ...endNode, x: parseInt(x), y: parseInt(y) });
   };
+
+  const updateVisitedGridCoordinate = (x, y) => {
+    if (startNode && x === startNode.x && y === startNode.y) {
+      return;
+    }
+    const temp = [...gridCoordinateState];
+
+    temp[x][y] = {
+      ...temp[x][y],
+      type: "visited"
+    };
+    setGridCoordinatState(temp);
+  }
+
+  const updatePathGridCoordinate = (x, y) => {
+    if (startNode && x === startNode.x && y === startNode.y) {
+      return;
+    }
+    const temp = [...gridCoordinateState];
+
+    temp[x][y] = {
+      ...temp[x][y],
+      type: "path"
+    };
+    setGridCoordinatState(temp);
+  }
+
   //#endregion  //*======== Grid State Management ===========
+
+  /**
+   * 
+   * @param data: Visited nodes in order of first expanded and 
+   * nodes in the resulting path
+   */
+  const simulateSearch = (data) => {
+    gridCoordinateState.forEach((data, x) => {
+      data.forEach((node, y) => {
+        if (node.type === "visited" || node.type === "path")
+          updateGridCoordinateState(node.x, node.y, "type", "node");
+      })
+    })
+
+    data.visitedNodes.forEach((node, i) => {
+      setTimeout(() => {
+        if (node.type !== "start" && node.type !== "end")
+          updateVisitedGridCoordinate(node.x, node.y);
+      }, i * 30);
+    })
+
+    if (data.pathNodes.length > 0) {
+      setTimeout(() => {
+        data.pathNodes.forEach((node, i) => {
+          setTimeout(() => {
+            if (node.type !== "start" && node.type !== "end")
+              updatePathGridCoordinate(node.x, node.y);
+          }, i * 30);
+        })
+      }, data.visitedNodes.length * 30)
+    }
+  }
 
   return (
     <div className="bg-dark flex items-center justify-center">
@@ -205,51 +272,20 @@ export default function App() {
         </header>
         <hr />
         {/* Algo Buttons (temporary?) */}
-        <div className="flex items-end">  
+        <div className="flex items-end">
           <Button
             onClick={() =>
-              breadthFirstSearch(
-                gridCoordinateState,
-                startNode,
-                endNode
+              simulateSearch(
+                breadthFirstSearch(
+                  gridCoordinateState,
+                  startNode,
+                  endNode
+                )
               )
             }
           >
             BFS
-          </Button>                
-          <Button
-            onClick={() =>
-              depthFirstSearch(
-                gridCoordinateState,
-                startNode,
-                endNode
-              )
-            }
-          >
-            DFS
-          </Button>                
-          <Button
-            onClick={() =>
-              greedyBestFirstSearch(
-                gridCoordinateState,
-                startNode,
-                endNode
-              )
-            }
-          >
-            Greedy
-          </Button>                
-          <Button
-            onClick={() =>
-              aStarSearch(
-                gridCoordinateState,
-                startNode,
-                endNode
-              )
-            }
-          >
-            Astar
-          </Button>                
+          </Button>
         </div>
         <hr />
         {/* Input Start & End Coordinate */}
@@ -355,6 +391,14 @@ export default function App() {
                       [
                         gridCoordinateState[x][y].type === "end" &&
                         "bg-primary-3",
+                      ],
+                      [
+                        gridCoordinateState[x][y].type === "visited" &&
+                        "bg-orange-300",
+                      ],
+                      [
+                        gridCoordinateState[x][y].type === "path" &&
+                        "bg-green-300",
                       ]
                     )}
                     onClick={() =>
