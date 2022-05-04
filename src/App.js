@@ -1,5 +1,8 @@
 import React from "react";
-import { breadthFirstSearch } from "./algo/breadthFirstSearch";
+import { breadthFirstSearch } from "./algorithm/breadthFirstSearch";
+import { depthFirstSearch } from "./algorithm/depthFirstSearch";
+import { greedyBestFirstSearch } from "./algorithm/greedyBestFirstSearch";
+import { aStarSearch } from "./algorithm/aStarSearch";
 import Button from "./component/Button";
 import Input from "./component/Input";
 import Select from "./component/Select";
@@ -12,7 +15,7 @@ const initialCoordinateState = {
   type: "node",
   value: false,
   isWall: false,
-  isVisited: false, previousNode: null,
+  isVisited: false, 
 
 };
 
@@ -28,7 +31,7 @@ let result = [...Array(initialGridState.x)].map(() =>
     type: "node",
     value: false,
     isWall: false,
-    isVisited: false, previousNode: null,
+    isVisited: false, 
 
   }))
 );
@@ -72,7 +75,7 @@ export default function App() {
         type: "node",
         value: false,
         isWall: false,
-        isVisited: false, previousNode: null,
+        isVisited: false, 
 
       }))
     );
@@ -112,7 +115,7 @@ export default function App() {
         type: "node",
         value: isWall,
         isWall: isWall,
-        isVisited: false, previousNode: null,
+        isVisited: false, 
 
       };
     }
@@ -123,7 +126,7 @@ export default function App() {
         type: "wall",
         value: isWall,
         isWall: isWall,
-        isVisited: false, previousNode: null,
+        isVisited: false, 
 
       };
     }
@@ -273,7 +276,7 @@ export default function App() {
         <hr />
         {/* Algo Buttons (temporary?) */}
         <div className="flex items-end">
-          <Button
+        <Button
             onClick={() =>
               simulateSearch(
                 breadthFirstSearch(
@@ -285,6 +288,45 @@ export default function App() {
             }
           >
             BFS
+          </Button>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                depthFirstSearch(
+                  gridCoordinateState,
+                  startNode,
+                  endNode
+                )
+              )
+            }
+          >
+            DFS
+          </Button>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                greedyBestFirstSearch(
+                  gridCoordinateState,
+                  startNode,
+                  endNode
+                )
+              )
+            }
+          >
+            Greedy
+          </Button>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                aStarSearch(
+                  gridCoordinateState,
+                  startNode,
+                  endNode
+                )
+              )
+            }
+          >
+            A Star
           </Button>
         </div>
         <hr />
