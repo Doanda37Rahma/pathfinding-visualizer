@@ -1,4 +1,8 @@
 import React from "react";
+import { breadthFirstSearch } from "./algo/breadthFirstSearch";
+import { depthFirstSearch } from "./algo/depthFirstSearch";
+import { greedyBestFirstSearch } from "./algo/greedyBestFirstSearch";
+import { aStarSearch } from "./algo/aStarSearch";
 import Button from "./component/Button";
 import Input from "./component/Input";
 import Select from "./component/Select";
@@ -8,6 +12,11 @@ import clsxm from "./lib/clsxm";
 const initialCoordinateState = {
   x: 0,
   y: 0,
+  type: "node",
+  value: false,
+  isWall: false,
+  isVisited: false, previousNode: null,
+  
 };
 
 const initialGridState = {
@@ -17,9 +26,13 @@ const initialGridState = {
 
 let result = [...Array(initialGridState.x)].map(() =>
   [...Array(initialGridState.y)].map(() => ({
+    x: 0,
+    y: 0,
     type: "node",
     value: false,
     isWall: false,
+    isVisited: false, previousNode: null,
+
   }))
 );
 //#endregion  //*======== Initial State ===========
@@ -32,7 +45,7 @@ export default function App() {
    * endNode = koordinat menggambarkan dimana node tujuan berada, {x:number, y:number}
    */
   const [sizeGrid, setSizeGrid] = React.useState(initialGridState);
-  const [startNode, setStartNode] = React.useState(null);
+  const [startNode, setStartNode] = React.useState(initialCoordinateState);
   const [endNode, setEndNode] = React.useState(initialCoordinateState);
 
   /**
@@ -55,11 +68,15 @@ export default function App() {
   );
 
   React.useEffect(() => {
-    let result = [...Array(sizeGrid.x)].map(() =>
-      [...Array(sizeGrid.y)].map(() => ({
+    let result = [...Array(sizeGrid.x)].map((_, x) =>
+      [...Array(sizeGrid.y)].map((_, y) => ({
+        x: parseInt(x),
+        y: parseInt(y),
         type: "node",
         value: false,
         isWall: false,
+        isVisited: false, previousNode: null,
+
       }))
     );
     setGridCoordinatState(result);
@@ -76,22 +93,30 @@ export default function App() {
     temp[x][y].value = value;
     setGridCoordinatState(temp);
   };
-  
+
   // update grid menjadi wall onClick
   const updateWallGridCoordinate = (x, y, isWall) => {
     const temp = [...gridCoordinateState];
-    if(!isWall){
+    if (!isWall) {
       temp[x][y] = {
+        x: parseInt(x),
+        y: parseInt(y),
         type: "node",
         value: isWall,
         isWall: isWall,
+        isVisited: false, previousNode: null,
+
       };
     }
-    else{
+    else {
       temp[x][y] = {
+        x: parseInt(x),
+        y: parseInt(y),
         type: "wall",
         value: isWall,
         isWall: isWall,
+        isVisited: false, previousNode: null,
+
       };
     }
     setGridCoordinatState(temp);
@@ -132,36 +157,41 @@ export default function App() {
     const temp = [...gridCoordinateState];
     if (startNode !== null) {
       temp[startNode.x][startNode.y] = {
+        ...temp[startNode.x][startNode.y],
         type: "node",
         value: false,
       };
     }
     temp[x][y] = {
+      ...temp[x][y],
       type: "start",
       value: true,
     };
+    console.log("start node updated");
     setGridCoordinatState(temp);
-    setStartNode({ x: x, y: y });
+    setStartNode({ ...startNode, x: parseInt(x), y: parseInt(y) });
   };
 
   const updateEndGridCoordinate = (x, y) => {
-    console.log(startNode, x, y);
     if (startNode && x === startNode.x && y === startNode.y) {
       return;
     }
     const temp = [...gridCoordinateState];
     if (endNode !== null) {
       temp[endNode.x][endNode.y] = {
+        ...temp[endNode.x][endNode.y],
         type: "node",
         value: false,
       };
     }
     temp[x][y] = {
+      ...temp[x][y],
       type: "end",
       value: true,
     };
+    console.log("end node updated");
     setGridCoordinatState(temp);
-    setEndNode({ x: x, y: y });
+    setEndNode({ ...endNode, x: parseInt(x), y: parseInt(y) });
   };
   //#endregion  //*======== Grid State Management ===========
 
@@ -173,6 +203,54 @@ export default function App() {
           <p className="text-primary-1">Pathfinding Visualizer</p>
           <h1 className="text-pink-200">DAA C</h1>
         </header>
+        <hr />
+        {/* Algo Buttons (temporary?) */}
+        <div className="flex items-end">  
+          <Button
+            onClick={() =>
+              breadthFirstSearch(
+                gridCoordinateState,
+                startNode,
+                endNode
+              )
+            }
+          >
+            BFS
+          </Button>                
+          <Button
+            onClick={() =>
+              depthFirstSearch(
+                gridCoordinateState,
+                startNode,
+                endNode
+              )
+            }
+          >
+            DFS
+          </Button>                
+          <Button
+            onClick={() =>
+              greedyBestFirstSearch(
+                gridCoordinateState,
+                startNode,
+                endNode
+              )
+            }
+          >
+            Greedy
+          </Button>                
+          <Button
+            onClick={() =>
+              aStarSearch(
+                gridCoordinateState,
+                startNode,
+                endNode
+              )
+            }
+          >
+            Astar
+          </Button>                
+        </div>
         <hr />
         {/* Input Start & End Coordinate */}
         <div className="grid md:grid-cols-2 gap-16">
@@ -272,11 +350,11 @@ export default function App() {
                       [gridCoordinateState[x][y].value && "bg-white/10"],
                       [
                         gridCoordinateState[x][y].type === "start" &&
-                          "bg-primary-1",
+                        "bg-primary-1",
                       ],
                       [
                         gridCoordinateState[x][y].type === "end" &&
-                          "bg-primary-3",
+                        "bg-primary-3",
                       ]
                     )}
                     onClick={() =>
