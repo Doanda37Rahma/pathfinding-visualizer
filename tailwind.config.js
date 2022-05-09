@@ -1,19 +1,13 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
-function withOpacityValue(variable) {
-  return ({ opacityValue }) => {
-    if (opacityValue === undefined) {
-      return `rgb(var(${variable}))`;
-    }
-    return `rgb(var(${variable}) / ${opacityValue})`;
-  };
-}
-
 /** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        home: "url(https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80)",
+      },
       fontFamily: {
         primary: ["Poppins", ...fontFamily.sans],
       },
@@ -53,4 +47,5 @@ module.exports = {
       },
     },
   },
+  plugins: [require("@tailwindcss/aspect-ratio")],
 };

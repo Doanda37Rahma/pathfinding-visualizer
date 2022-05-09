@@ -7,6 +7,11 @@ import Button from "./component/Button";
 import Input from "./component/Input";
 import Select from "./component/Select";
 import clsxm from "./lib/clsxm";
+import CoverSection from "./container/CoverSection";
+import ContentSection from "./container/ContentSection";
+import StepSection from "./container/StepSection";
+import ColorSection from "./container/ColorSection";
+import Footer from "./container/Footer";
 
 //#region  //*=========== Initial State ===========
 const initialCoordinateState = {
@@ -15,8 +20,7 @@ const initialCoordinateState = {
   type: "node",
   value: false,
   isWall: false,
-  isVisited: false, 
-
+  isVisited: false,
 };
 
 const initialGridState = {
@@ -31,8 +35,7 @@ let result = [...Array(initialGridState.x)].map(() =>
     type: "node",
     value: false,
     isWall: false,
-    isVisited: false, 
-
+    isVisited: false,
   }))
 );
 //#endregion  //*======== Initial State ===========
@@ -75,8 +78,7 @@ export default function App() {
         type: "node",
         value: false,
         isWall: false,
-        isVisited: false, 
-
+        isVisited: false,
       }))
     );
     setGridCoordinatState(result);
@@ -90,8 +92,12 @@ export default function App() {
    * @param value : value yang menggantikan value lama
    */
   const updateGridCoordinateState = (x, y, key, value) => {
-    if (x < 0 || x > gridCoordinateState.length - 1 ||
-      y < 0 || y > gridCoordinateState[0].length - 1) {
+    if (
+      x < 0 ||
+      x > gridCoordinateState.length - 1 ||
+      y < 0 ||
+      y > gridCoordinateState[0].length - 1
+    ) {
       return;
     }
 
@@ -99,7 +105,7 @@ export default function App() {
 
     temp[x][y] = {
       ...temp[x][y],
-      [key]: value
+      [key]: value,
     };
 
     setGridCoordinatState(temp);
@@ -115,23 +121,20 @@ export default function App() {
         type: "node",
         value: isWall,
         isWall: isWall,
-        isVisited: false, 
-
+        isVisited: false,
       };
-    }
-    else {
+    } else {
       temp[x][y] = {
         x: parseInt(x),
         y: parseInt(y),
         type: "wall",
         value: isWall,
         isWall: isWall,
-        isVisited: false, 
-
+        isVisited: false,
       };
     }
     setGridCoordinatState(temp);
-  }
+  };
 
   /**
    * diabaikan saja fungsi dibawah ini, tekan Ctrl + K + 8 untuk collapse bagian ini ya
@@ -213,10 +216,10 @@ export default function App() {
 
     temp[x][y] = {
       ...temp[x][y],
-      type: "visited"
+      type: "visited",
     };
     setGridCoordinatState(temp);
-  }
+  };
 
   const updatePathGridCoordinate = (x, y) => {
     if (startNode && x === startNode.x && y === startNode.y) {
@@ -226,16 +229,16 @@ export default function App() {
 
     temp[x][y] = {
       ...temp[x][y],
-      type: "path"
+      type: "path",
     };
     setGridCoordinatState(temp);
-  }
+  };
 
   //#endregion  //*======== Grid State Management ===========
 
   /**
-   * 
-   * @param data: Visited nodes in order of first expanded and 
+   *
+   * @param data: Visited nodes in order of first expanded and
    * nodes in the resulting path
    */
   const simulateSearch = (data) => {
@@ -243,15 +246,15 @@ export default function App() {
       data.forEach((node, y) => {
         if (node.type === "visited" || node.type === "path")
           updateGridCoordinateState(node.x, node.y, "type", "node");
-      })
-    })
+      });
+    });
 
     data.visitedNodes.forEach((node, i) => {
       setTimeout(() => {
         if (node.type !== "start" && node.type !== "end")
           updateVisitedGridCoordinate(node.x, node.y);
       }, i * 30);
-    })
+    });
 
     if (data.pathNodes.length > 0) {
       setTimeout(() => {
@@ -260,80 +263,31 @@ export default function App() {
             if (node.type !== "start" && node.type !== "end")
               updatePathGridCoordinate(node.x, node.y);
           }, i * 30);
-        })
-      }, data.visitedNodes.length * 30)
+        });
+      }, data.visitedNodes.length * 30);
     }
-  }
+  };
 
   return (
-    <div className="bg-dark flex items-center justify-center">
-      <div className="layout py-20 min-h-screen flex flex-col gap-4 md:gap-8">
-        {/* Title */}
-        <header>
-          <p className="text-primary-1">Pathfinding Visualizer</p>
-          <h1 className="text-pink-200">DAA C</h1>
-        </header>
-        <hr />
-        {/* Algo Buttons (temporary?) */}
-        <div className="flex items-end">
-        <Button
-            onClick={() =>
-              simulateSearch(
-                breadthFirstSearch(
-                  gridCoordinateState,
-                  startNode,
-                  endNode
-                )
-              )
-            }
-          >
-            BFS
-          </Button>
-          <Button
-            onClick={() =>
-              simulateSearch(
-                depthFirstSearch(
-                  gridCoordinateState,
-                  startNode,
-                  endNode
-                )
-              )
-            }
-          >
-            DFS
-          </Button>
-          <Button
-            onClick={() =>
-              simulateSearch(
-                greedyBestFirstSearch(
-                  gridCoordinateState,
-                  startNode,
-                  endNode
-                )
-              )
-            }
-          >
-            Greedy
-          </Button>
-          <Button
-            onClick={() =>
-              simulateSearch(
-                aStarSearch(
-                  gridCoordinateState,
-                  startNode,
-                  endNode
-                )
-              )
-            }
-          >
-            A Star
-          </Button>
+    <div className="bg-dark flex flex-col items-center justify-center">
+      <CoverSection />
+      <ContentSection />
+      <div className="layout min-h-screen py-20 flex flex-col gap-4 md:gap-8">
+        <StepSection />
+        {/* Select Grid Size */}
+        <div>
+          <h4>
+            <small>01.</small> Grid{" "}
+            <span className="text-secondary-1">Size</span>
+          </h4>
+          <Select setGridState={setSizeGrid} />
         </div>
         <hr />
         {/* Input Start & End Coordinate */}
         <div className="grid md:grid-cols-2 gap-16">
           <div className="flex flex-col gap-4">
             <h4>
+              <small>02.</small>
               Start <span className="text-primary-1">Coordinate</span>
             </h4>
             <div className="grid grid-cols-3 gap-2">
@@ -372,6 +326,7 @@ export default function App() {
           </div>
           <div className="flex flex-col gap-4">
             <h4>
+              <small>03.</small>
               End <span className="text-primary-3">Coordinate</span>
             </h4>
             <div className="grid grid-cols-3 gap-2">
@@ -404,61 +359,111 @@ export default function App() {
             </div>
           </div>
         </div>
-        {/* Select Grid Size */}
-        <div>
-          <p>Grid Size</p>
-          <Select setGridState={setSizeGrid} />
-        </div>
+        <hr />
         {/* Path Grid Visualizer*/}
-        <div className="flex justify-center ">
+        <h4 className="w-full">
+          <small>04.</small>
+          Create <span className="text-primary-1">Maze</span>
+        </h4>
+        <div className="flex justify-center overflow-auto">
           <div
-            className=" grid divide-y"
+            className="grid divide-y  min-w-max"
             style={{
               gridTemplateColumns: `repeat(${sizeGrid.x}, minmax(0, 1fr))`,
             }}
           >
             {gridCoordinateState.map((data, x) => (
-              <div className="flex flex-col">
+              <div className="flex flex-col ">
                 {data.map((_, y) => (
                   <div
                     key={`${x}${y}`}
                     className={clsxm(
-                      "border aspect-square p-1 w-12 cursor-pointer transition-all duration-100 ease-in",
+                      "border aspect-square text-white/10 p-1 w-12  cursor-pointer transition-all duration-200 ease-in",
                       [x === sizeGrid.x - 1 && "border-r"],
-                      [gridCoordinateState[x][y].value && "bg-white/10"],
+                      [
+                        gridCoordinateState[x][y].value &&
+                          "bg-white text-black",
+                      ],
                       [
                         gridCoordinateState[x][y].type === "start" &&
-                        "bg-primary-1",
+                          "bg-primary-1 text-white",
                       ],
                       [
                         gridCoordinateState[x][y].type === "end" &&
-                        "bg-primary-3",
+                          "bg-primary-3 text-white",
                       ],
                       [
                         gridCoordinateState[x][y].type === "visited" &&
-                        "bg-orange-300",
+                          "bg-orange-300",
                       ],
                       [
                         gridCoordinateState[x][y].type === "path" &&
-                        "bg-green-300",
+                          "bg-green-300",
                       ]
                     )}
                     onClick={() =>
                       updateWallGridCoordinate(
                         x,
                         y,
-                        !gridCoordinateState[x][y].isWall,
+                        !gridCoordinateState[x][y].isWall
                       )
                     }
                   >
-                    <small className="text-white/20"> {`(${x},${y})`}</small>
+                    <small>{`(${x},${y})`}</small>
                   </div>
                 ))}
               </div>
             ))}
           </div>
         </div>
+        <hr />
+        {/* Algo Buttons (temporary?) */}
+        <div className="flex flex-wrap gap-4 items-center ">
+          <h4>
+            <small>05.</small>
+            Start <span className="text-primary-1">Visualize</span>
+          </h4>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                breadthFirstSearch(gridCoordinateState, startNode, endNode)
+              )
+            }
+          >
+            BFS
+          </Button>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                depthFirstSearch(gridCoordinateState, startNode, endNode)
+              )
+            }
+          >
+            DFS
+          </Button>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                greedyBestFirstSearch(gridCoordinateState, startNode, endNode)
+              )
+            }
+          >
+            Greedy
+          </Button>
+          <Button
+            onClick={() =>
+              simulateSearch(
+                aStarSearch(gridCoordinateState, startNode, endNode)
+              )
+            }
+          >
+            A Star
+          </Button>
+        </div>
+        <hr />
+        <ColorSection />
       </div>
+      <Footer />
     </div>
   );
 }

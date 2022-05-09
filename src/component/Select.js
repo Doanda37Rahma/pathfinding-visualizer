@@ -29,7 +29,9 @@ export default function Select({ setGridState }) {
 
   React.useEffect(() => {
     updateGrid();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectState]);
+
   return (
     <select
       value={selectState}
