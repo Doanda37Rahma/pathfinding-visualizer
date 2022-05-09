@@ -249,6 +249,11 @@ export default function App() {
       });
     });
 
+    var highestTimeoutId = setTimeout(";");
+    for (var i = 0 ; i < highestTimeoutId ; i++) {
+        clearTimeout(i); 
+    }    
+
     data.visitedNodes.forEach((node, i) => {
       setTimeout(() => {
         if (node.type !== "start" && node.type !== "end")
@@ -382,23 +387,23 @@ export default function App() {
                       [x === sizeGrid.x - 1 && "border-r"],
                       [
                         gridCoordinateState[x][y].value &&
-                          "bg-white text-black",
+                        "bg-white text-black",
                       ],
                       [
                         gridCoordinateState[x][y].type === "start" &&
-                          "bg-primary-1 text-white",
+                        "bg-primary-1 text-white",
                       ],
                       [
                         gridCoordinateState[x][y].type === "end" &&
-                          "bg-primary-3 text-white",
+                        "bg-primary-3 text-white",
                       ],
                       [
                         gridCoordinateState[x][y].type === "visited" &&
-                          "bg-orange-300",
+                        "bg-orange-300",
                       ],
                       [
                         gridCoordinateState[x][y].type === "path" &&
-                          "bg-green-300",
+                        "bg-green-300",
                       ]
                     )}
                     onClick={() =>
