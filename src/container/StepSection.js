@@ -14,7 +14,7 @@ export default function StepSection() {
           3. Select your End Coordinate and click Update
         </p>
         <p className="text-xs">
-          4. Create your maze by clicking the squares on the grid area
+          4. Create your maze by clicking the squares on the grid area, or generate it randomly
         </p>
         <p className="text-xs">
           5. Select one of four algorithm to visualize path searching
