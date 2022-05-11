@@ -12,6 +12,7 @@ import ContentSection from "./container/ContentSection";
 import StepSection from "./container/StepSection";
 import ColorSection from "./container/ColorSection";
 import Footer from "./container/Footer";
+import { generateWalls } from "./algorithm/generateWalls";
 
 //#region  //*=========== Initial State ===========
 const initialCoordinateState = {
@@ -233,11 +234,40 @@ export default function App() {
     };
     setGridCoordinatState(temp);
   };
-
+  
   //#endregion  //*======== Grid State Management ===========
-
+  
+   /**
+   * @param data: Coordinates of selected grid to be updated
+   */
+  const createWall = (data) => {
+    for(let i=0; i<data.length; i++) {
+      for(let j=0; j<data[0].length; j++){
+        if(data[i][j] === 1){
+          updateWallGridCoordinate(i, j, !gridCoordinateState[i][j].isWall);
+        }
+      }
+    }
+  }
+  //clear all wall
+  const clearMaze = () => {
+    const temp = [...gridCoordinateState];
+    for(let i = 0; i < gridCoordinateState.length; i++){
+      for(let j = 0; j < gridCoordinateState[0].length; j++){
+        temp[i][j] = {
+          x: parseInt(i),
+          y: parseInt(j),
+          type: "node",
+          value: false,
+          isWall: false,
+          isVisited: false,
+        };
+        setGridCoordinatState(temp);
+      }
+    }
+  }
+  
   /**
-   *
    * @param data: Visited nodes in order of first expanded and
    * nodes in the resulting path
    */
@@ -282,7 +312,7 @@ export default function App() {
         {/* Select Grid Size */}
         <div>
           <h4>
-            <small>01.</small> Grid{" "}
+            <small>01. </small> Grid{" "}
             <span className="text-secondary-1">Size</span>
           </h4>
           <Select setGridState={setSizeGrid} />
@@ -292,7 +322,7 @@ export default function App() {
         <div className="grid md:grid-cols-2 gap-16">
           <div className="flex flex-col gap-4">
             <h4>
-              <small>02.</small>
+              <small>02. </small>
               Start <span className="text-primary-1">Coordinate</span>
             </h4>
             <div className="grid grid-cols-3 gap-2">
@@ -331,7 +361,7 @@ export default function App() {
           </div>
           <div className="flex flex-col gap-4">
             <h4>
-              <small>03.</small>
+              <small>03. </small>
               End <span className="text-primary-3">Coordinate</span>
             </h4>
             <div className="grid grid-cols-3 gap-2">
@@ -366,10 +396,28 @@ export default function App() {
         </div>
         <hr />
         {/* Path Grid Visualizer*/}
-        <h4 className="w-full">
-          <small>04.</small>
-          Create <span className="text-primary-1">Maze</span>
-        </h4>
+        <div className="flex flex-wrap gap-4 items-center ">
+          <h4>
+            <small>04. </small>
+            Create <span className="text-primary-1">Maze</span>
+          </h4>
+          <Button
+            onClick={() =>
+              createWall(
+                generateWalls(gridCoordinateState)
+              )
+            }
+          >
+            Generate Random Maze
+          </Button>
+          <Button
+            onClick={() =>
+              clearMaze()
+            }
+          >
+            Clear Maze
+          </Button>
+        </div>
         <div className="flex justify-center overflow-auto">
           <div
             className="grid divide-y  min-w-max"
@@ -425,7 +473,7 @@ export default function App() {
         {/* Algo Buttons (temporary?) */}
         <div className="flex flex-wrap gap-4 items-center ">
           <h4>
-            <small>05.</small>
+            <small>05. </small>
             Start <span className="text-primary-1">Visualize</span>
           </h4>
           <Button
