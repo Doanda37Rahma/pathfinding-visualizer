@@ -2,7 +2,7 @@ export function generateWalls(grid) {
 
     let row = grid.length, // width and height of the map
       col = grid[0].length,
-      maxPath = Math.floor(8), // maximum path number
+      maxPath = Math.floor(row/0.8), // maximum path number
       maxLength = Math.floor(col+row/2), // maximum path length
 
       map = createArray(1, row, col), // create a 2d array with '1' as every element
