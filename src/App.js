@@ -39,6 +39,12 @@ let result = [...Array(initialGridState.x)].map(() =>
     isVisited: false,
   }))
 );
+
+let initialSearchState = {
+  nodesExpanded : 0,
+  pathLength : 0,
+  duration : 0,
+};
 //#endregion  //*======== Initial State ===========
 
 export default function App() {
@@ -69,6 +75,9 @@ export default function App() {
   );
   const [endCoordinateState, setEndCoordinatState] = React.useState(
     initialCoordinateState
+  );
+  const [searchState, setSearchState] = React.useState(
+    initialSearchState
   );
 
   React.useEffect(() => {
@@ -301,6 +310,12 @@ export default function App() {
         });
       }, data.visitedNodes.length * 30);
     }
+
+    setSearchState({
+      nodesExpanded: data.visitedNodes.length,
+      pathLength: data.pathNodes.length,
+      duration: data.duration,
+    })
   };
 
   return (
@@ -470,7 +485,7 @@ export default function App() {
           </div>
         </div>
         <hr />
-        {/* Algo Buttons (temporary?) */}
+        {/* Algo Buttons */}
         <div className="flex flex-wrap gap-4 items-center ">
           <h4>
             <small>05. </small>
@@ -512,6 +527,18 @@ export default function App() {
           >
             A Star
           </Button>
+        </div>
+        <hr />
+        {/* Analysis */}
+        <div className="flex flex-col gap-4 ">
+        <h4>
+          <small>06. </small>
+          Algorithm <span className="text-primary-1">Analysis</span>
+        </h4>
+        <p> Number of nodes expanded : <span className="text-primary-1 text-lg ">{searchState.nodesExpanded}</span></p>
+        <p> Number of nodes in resulting path : <span className="text-primary-1 text-lg ">{searchState.pathLength}</span></p>
+        <p> Time taken : <span className="text-primary-1 text-lg ">{searchState.duration}</span> miliseconds</p>
+        
         </div>
         <hr />
         <ColorSection />

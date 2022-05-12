@@ -3,9 +3,10 @@
  * @param grid
  * @param startNode
  * @param endNode
- * @returns Object with 2 properties
+ * @returns Object with 3 properties
  *          visitedNodes: Expanded nodes ordered from the first to the last 
  *          pathNodes: Nodes in the resulted path
+ *          duration: Time taken in miliseconds
  */
  export function aStarSearch(grid, startNode, endNode) {
   let activeGrid = generateGrid(grid);
@@ -16,11 +17,13 @@
   let sortedQueue = [];
   let visitedNodes = [];
   let pathNodes = [];
+  let startTime = performance.now();
 
   let result = {
     visitedNodes: visitedNodes,
     pathNodes: pathNodes,
-  }
+    duration: 0,
+    }
 
   let startActiveNode = activeGrid[startNode.x][startNode.y];
   startActiveNode.costFromStart = 0;
@@ -36,7 +39,8 @@
     if (nearestNode.x === endNode.x && 
         nearestNode.y === endNode.y) {
       result.pathNodes = getPathNodes(activeGrid, endNode);
-      console.log(result);
+      result.duration = performance.now() - startTime;
+        console.log(result);
       return result;
     }
 
@@ -56,6 +60,8 @@
       }
     }
   }
+
+  result.duration = performance.now() - startTime;
   return result;
 }
 

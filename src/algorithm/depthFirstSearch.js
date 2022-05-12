@@ -1,4 +1,13 @@
-
+/**
+ * 
+ * @param grid
+ * @param startNode
+ * @param endNode
+ * @returns Object with 3 properties
+ *          visitedNodes: Expanded nodes ordered from the first to the last 
+ *          pathNodes: Nodes in the resulted path
+ *          duration: Time taken in miliseconds
+ */
 export function depthFirstSearch(grid, startNode, endNode) {
   let activeGrid = generateGrid(grid);
 
@@ -9,10 +18,12 @@ export function depthFirstSearch(grid, startNode, endNode) {
   let stack = [];
   let visitedNodes = [];
   let pathNodes = [];
+  let startTime = performance.now();
 
   let result = {
     visitedNodes: visitedNodes,
     pathNodes: pathNodes,
+    duration: 0,
   }
 
   stack.push(activeGrid[startNode.x][startNode.y]);
@@ -25,6 +36,7 @@ export function depthFirstSearch(grid, startNode, endNode) {
     if (nearestNode.x === endNode.x && 
         nearestNode.y === endNode.y) {
       result.pathNodes = getPathNodes(activeGrid, endNode);
+      result.duration = performance.now() - startTime;
       console.log(result);
       return result;
     }
@@ -35,6 +47,8 @@ export function depthFirstSearch(grid, startNode, endNode) {
       stack.push(neighbour);
     }
   }
+
+  result.duration = performance.now() - startTime;
   return result;
 }
 
