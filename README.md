@@ -22,7 +22,8 @@ This web application helps visualize how some algorithms work, namely:
 
 # How we built it🔧
 
-For the first several 3-4 days, we brainstormed to decide on what project we should work on. After we decided to create this Pathvinding Visualizer, we worked on each part and did a follow-up every day. For this Project, Doanda worked on the algorithm part, including BFS, DFS, GBFS, and A\* and connected them to the front-end interface. While Warren is in charge of working on the automatic generation of the wall and connecting it to the maze and path algorithms. And lastly, Wina, is in charge of working on the display part of the maze and making an algorithm to update the state on the front-end interface.
+<div style="text-align: right"> For the first several 3-4 days, we brainstormed to decide on what project we should work on. After we decided to create this Pathvinding Visualizer, we worked on each part and did a follow-up every day. For this Project, Doanda worked on the algorithm part, including BFS, DFS, GBFS, and A\* and connected them to the front-end interface. While Warren is in charge of working on the automatic generation of the wall and connecting it to the maze and path algorithms. And lastly, Wina, is in charge of working on the display part of the maze and making an algorithm to update the state on the front-end interface.
+ </div>
 
 # Relevant Repositories/link✨
 
