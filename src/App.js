@@ -250,6 +250,7 @@ export default function App() {
    * @param data: Coordinates of selected grid to be updated
    */
   const createWall = (data) => {
+    clearMaze();
     for(let i=0; i<data.length; i++) {
       for(let j=0; j<data[0].length; j++){
         if(data[i][j] === 1){
