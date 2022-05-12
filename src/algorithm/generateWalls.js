@@ -50,7 +50,7 @@ export function generateWalls(grid) {
     return map; //return the map of created 
 }
 
-//helper function to make a two dimentional array that takes a number and the dimentions of the array
+//helper function to make a two dimensional array that takes a number and the dimensions of the array
 function createArray(num, row, col) {
   var array = [];
   for (var i = 0; i < row; i++) {
